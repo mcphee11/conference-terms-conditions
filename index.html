@@ -1,118 +1,60 @@
 <!DOCTYPE html>
-
-<head>
+<!-- Created as an example by https://github.com/mcphee11 Version 2.0 -->
+<html>
+  <head>
     <meta name="robots" content="noindex" />
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title></title>
-    <meta name="Template" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Template" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Genesys CSS https://spark.genesys.com/ -->
-    <link
-        href="https://dhqbrvplips7x.cloudfront.net/common-ui-docs/genesys-webcomponents/3.8.1-178/genesys-webcomponents/genesys-webcomponents.css"
-        rel="stylesheet">
-    <script type="module"
-        src="https://dhqbrvplips7x.cloudfront.net/common-ui-docs/genesys-webcomponents/3.8.1-178/genesys-webcomponents/genesys-webcomponents.esm.js"></script>
+    <link href="https://dhqbrvplips7x.cloudfront.net/common-ui-docs/genesys-webcomponents/3.8.1-178/genesys-webcomponents/genesys-webcomponents.css" rel="stylesheet" />
+    <script type="module" src="https://dhqbrvplips7x.cloudfront.net/common-ui-docs/genesys-webcomponents/3.8.1-178/genesys-webcomponents/genesys-webcomponents.esm.js"></script>
     <!-- Genesys SDK info https://developer.genesys.cloud/ -->
     <script src="https://sdk-cdn.mypurecloud.com/javascript/143.0.0/purecloud-platform-client-v2.min.js"></script>
-</head>
-
-<body onload="start()" style="background-color: white;">
-    <gux-button accent="primary" onclick="conference()">
-        Conference in Terms & Conditions
-    </gux-button>
+  </head>
+  <body onload="start()" style="background-color: white">
+    <gux-button accent="primary" onclick="conference()"> Conference in Terms & Conditions </gux-button>
     <script>
-        let debug = true //localStorage.getItem('_gc_debug') //Enables user to set debug mode from browser localStorage
-        let gc_region = getParameterByName('gc_region')
-        let gc_clientId = getParameterByName('gc_clientId')
-        let gc_redirectUrl = getParameterByName('gc_redirectUrl')
-        let gc_conversationId = getParameterByName('gc_conversationId')
-        let gc_flowId = getParameterByName('gc_flowId')
+      'use strict' //Enables strict mode is JavaScript
+      let url = new URL(document.location.href)
+      let gc_region = url.searchParams.get('gc_region')
+      let gc_clientId = url.searchParams.get('gc_clientId')
+      let gc_redirectUrl = url.searchParams.get('gc_redirectUrl')
+      let gc_conversationId = url.searchParams.get('gc_conversationId')
+      let gc_flowId = url.searchParams.get('gc_flowId')
 
-        //Getting and setting the GC details from dynamic URL and session storage
-        if (gc_region) {
-            sessionStorage.setItem('gc_region', gc_region)
-            if (debug) console.log('gc_region Saved: ', gc_region)
-        } else {
-            gc_region = sessionStorage.getItem('gc_region')
-            if (debug) console.log('gc_region retrieved: ', gc_region)
+      //Getting and setting the GC details from dynamic URL and session storage
+      gc_region ? sessionStorage.setItem('gc_region', gc_region) : (gc_region = sessionStorage.getItem('gc_region'))
+      gc_clientId ? sessionStorage.setItem('gc_clientId', gc_clientId) : (gc_clientId = sessionStorage.getItem('gc_clientId'))
+      gc_redirectUrl ? sessionStorage.setItem('gc_redirectUrl', gc_redirectUrl) : (gc_redirectUrl = sessionStorage.getItem('gc_redirectUrl'))
+      gc_conversationId ? sessionStorage.setItem('gc_conversationId', gc_conversationId) : (gc_conversationId = sessionStorage.getItem('gc_conversationId'))
+      gc_flowId ? sessionStorage.setItem('gc_flowId', gc_flowId) : (gc_flowId = sessionStorage.getItem('gc_flowId'))
+
+      let platformClient = require('platformClient')
+      const client = platformClient.ApiClient.instance
+      const capi = new platformClient.ConversationsApi()
+
+      async function start() {
+        try {
+          client.setEnvironment(gc_region)
+          client.setPersistSettings(true, '_mm_')
+          console.log('Logging in to Genesys Cloud')
+          await client.loginImplicitGrant(gc_clientId, gc_redirectUrl, {})
+
+          //Enter in starting code.
+          console.log('Terms & Conditions JS Loaded.')
+        } catch (err) {
+          console.log('Error: ', err)
         }
-        if (gc_clientId) {
-            sessionStorage.setItem('gc_clientId', gc_clientId)
-            if (debug) console.log('gc_clientId Saved: ', gc_clientId)
-        } else {
-            gc_clientId = sessionStorage.getItem('gc_clientId')
-            if (debug) console.log('gc_clientId retrieved: ', gc_clientId)
-        }
-        if (gc_redirectUrl) {
-            sessionStorage.setItem('gc_redirectUrl', gc_redirectUrl)
-            if (debug) console.log('gc_redirectUrl Saved: ', gc_redirectUrl)
-        } else {
-            gc_redirectUrl = sessionStorage.getItem('gc_redirectUrl')
-            if (debug) console.log('gc_redirectUrl retrieved: ', gc_redirectUrl)
-        }
-        if (gc_conversationId) {
-            sessionStorage.setItem('gc_conversationId', gc_conversationId)
-            if (debug) console.log('gc_conversationId Saved: ', gc_conversationId)
-        } else {
-            gc_conversationId = sessionStorage.getItem('gc_conversationId')
-            if (debug) console.log('gc_conversationId retrieved: ', gc_conversationId)
-        }
-        if (gc_flowId) {
-            sessionStorage.setItem('gc_flowId', gc_flowId)
-            if (debug) console.log('gc_flowId Saved: ', gc_flowId)
-        } else {
-            gc_flowId = sessionStorage.getItem('gc_flowId')
-            if (debug) console.log('gc_flowId retrieved: ', gc_flowId)
-        }
+      } //End of start() function
 
-        let platformClient = require('platformClient')
-        const client = platformClient.ApiClient.instance
-        const uapi = new platformClient.UsersApi()
-        const capi = new platformClient.ConversationsApi()
-
-        async function start() {
-            try {
-
-                client.setEnvironment(gc_region)
-                client.setPersistSettings(true, '_mm_')
-
-                if (debug) console.log('Logging in to Genesys Cloud')
-                await client.loginImplicitGrant(gc_clientId, gc_redirectUrl, {})
-
-                //Enter in starting code.
-                console.log('Terms & Conditions JS Loaded.')
-
-            } catch (err) {
-                console.log('Error: ', err)
-            }
-        } //End of start() function
-
-        //JavaScript Native way to get Url Parameters for config
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        async function conference() {
-
-            let body = {
-                participants: [
-                    {
-                        address: `${gc_flowId}@localhost.com`
-                    }
-                ]
-            }
-
-            let conf = await capi.postConversationsCallParticipants(gc_conversationId, body)
-            console.log(conf)
-        }
+      async function conference() {
+        let body = { participants: [{ address: `${gc_flowId}@localhost.com` }] }
+        let conf = await capi.postConversationsCallParticipants(gc_conversationId, body)
+        console.log(conf)
+      }
     </script>
-</body>
-
+  </body>
 </html>
