@@ -44,6 +44,22 @@ NOTE: I'm in the apse2 region so i have the "mypurecloud.com.au" this may differ
 
 Once you host the html file on a web server this would also be moved form localhost:8080 when this is done remember to also add it as a redirect in your OAuth client you setup earlier.
 
+### Caution Advanced Option:
+
+So you may of noticed that the iFrame or WebPage that you have embedded into the Agent Script has a vertical scroll bar no matter what size you make it... Personally I find this ugly and annoying. To fix this you need to Export the agent script and edit the raw JSON inside the file.
+
+You are looking for the "height" object just before the URL you are using. Ensure that your looking at the right object and change the height sizeType to be `auto` like below.
+
+```
+"height":{"typeName":"sizing","value":{"sizeType":"auto"}}
+```
+
+then save the file and do a `replace` on th existing script with the edited file. You should now notice that the element now when you click on it is selected as "Auto Sizing"
+
+![](/docs/images/height.png?raw=true)
+
+This will now remove the vertical scroll bar and make the UI look that bit nicer.
+
 ## Testing
 
 Now your done. Make a call in and when you click on the button as an agent you should get the flow conferenced into the interaction. This will then also be visible in the transcript and heard by both agent and customer for compliance.
