@@ -25,6 +25,7 @@
       let gc_conversationId = url.searchParams.get('gc_conversationId')
       let gc_flowId = url.searchParams.get('gc_flowId')
       let gc_buttonText = url.searchParams.get('gc_buttonText')
+      let gc_buttonAccent = url.searchParams.get('gc_buttonAccent')
 
       //Getting and setting the GC details from dynamic URL and session storage
       gc_region ? sessionStorage.setItem('gc_region', gc_region) : (gc_region = sessionStorage.getItem('gc_region'))
@@ -33,8 +34,10 @@
       gc_conversationId ? sessionStorage.setItem('gc_conversationId', gc_conversationId) : (gc_conversationId = sessionStorage.getItem('gc_conversationId'))
       gc_flowId ? sessionStorage.setItem('gc_flowId', gc_flowId) : (gc_flowId = sessionStorage.getItem('gc_flowId'))
       gc_buttonText ? sessionStorage.setItem('gc_buttonText', gc_buttonText) : (gc_buttonText = sessionStorage.getItem('gc_buttonText'))
+      gc_buttonAccent ? sessionStorage.setItem('gc_buttonAccent', gc_buttonAccent) : (gc_buttonAccent = sessionStorage.getItem('gc_buttonAccent'))
 
       gc_buttonText ? (document.getElementById('button').innerText = gc_buttonText) : null
+      gc_buttonAccent ? (document.getElementById('button').accent = gc_buttonAccent) : null
 
       let platformClient = require('platformClient')
       const client = platformClient.ApiClient.instance
