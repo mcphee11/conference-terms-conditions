@@ -44,7 +44,26 @@ NOTE: I'm in the apse2 region so i have the "mypurecloud.com.au" this may differ
 
 Once you host the html file on a web server this would also be moved form localhost:8080 when this is done remember to also add it as a redirect in your OAuth client you setup earlier.
 
+### Options
+
+I have added the ability for both the button text as well as the button accent to be configured based on the URL Params to make it more dynamic.
+
+```
+gc_buttonText
+gc_buttonAccent
+```
+
+These can be appended to the URL as well if required eg:
+
+```
+gc_buttonText=Hello&gc_buttonAccent=secondary
+```
+
+For a list of the Accents supported you can find this in the SPARK documentation for the GUX components.
+
 ### Caution Advanced Option:
+
+`UPDATE` in the latest updates to the agent script the below scroll bar no longer seems to be an issue but i will leave the below for reference just incase.
 
 So you may of noticed that the iFrame or WebPage that you have embedded into the Agent Script has a vertical scroll bar no matter what size you make it... Personally I find this ugly and annoying. To fix this you need to Export the agent script and edit the raw JSON inside the file.
 
